@@ -8,7 +8,7 @@ input:
         }
 error: |
     Error while creating converter method:
-        func (github.com/jmattheis/goverter/execution.Converter).Convert(source []int16) int8
+        func (github.com/FanFani4/goverter/execution.Converter).Convert(source []int16) int8
 
     | []int16
     |

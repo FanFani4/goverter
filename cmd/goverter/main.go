@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	goverter "github.com/jmattheis/goverter"
+	goverter "github.com/FanFani4/goverter"
 )
 
 func main() {

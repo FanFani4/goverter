@@ -18,9 +18,9 @@ input:
         }
 error: |
     Error while creating converter method:
-        func (github.com/jmattheis/goverter/execution.Converter).Convert(source github.com/jmattheis/goverter/execution.Input) github.com/jmattheis/goverter/execution.Output
+        func (github.com/FanFani4/goverter/execution.Converter).Convert(source github.com/FanFani4/goverter/execution.Input) github.com/FanFani4/goverter/execution.Output
 
-    | github.com/jmattheis/goverter/execution.Input
+    | github.com/FanFani4/goverter/execution.Input
     |
     |
     |
@@ -29,7 +29,7 @@ error: |
     |      |
     |      | string
     |
-    | github.com/jmattheis/goverter/execution.Output
+    | github.com/FanFani4/goverter/execution.Output
 
     Cannot set value for unexported field "name".
 
@@ -43,7 +43,7 @@ error: |
 
     * Create a custom converter function (only works, if the struct with unexported fields is nested inside another struct)
 
-          func CustomConvert(source github.com/jmattheis/goverter/execution.Input) github.com/jmattheis/goverter/execution.Output {
+          func CustomConvert(source github.com/FanFani4/goverter/execution.Input) github.com/FanFani4/goverter/execution.Output {
               // implement me
           }
 
@@ -52,4 +52,4 @@ error: |
               // ...
           }
 
-    See https://github.com/jmattheis/goverter#extend-with-custom-implementation
+    See https://github.com/FanFani4/goverter#extend-with-custom-implementation

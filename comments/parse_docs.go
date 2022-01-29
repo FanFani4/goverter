@@ -28,8 +28,10 @@ type Converter struct {
 
 // ConverterConfig contains settings that can be set via comments.
 type ConverterConfig struct {
-	Name          string
-	ExtendMethods []string
+	Name             string
+	ExtendMethods    []string
+	CaseInsensitive  bool
+	IgnoreUnexported bool
 }
 
 // Method contains settings that can be set via comments.
@@ -167,6 +169,14 @@ func parseConverterComment(comment string, config ConverterConfig) (ConverterCon
 				}
 				config.Name = fields[1]
 				continue
+			case "case_insensitive":
+				config.CaseInsensitive = true
+				continue
+
+			case "ignore_unexported":
+				config.IgnoreUnexported = true
+				continue
+
 			case "extend":
 				config.ExtendMethods = append(config.ExtendMethods, fields[1:]...)
 				continue

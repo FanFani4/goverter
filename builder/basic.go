@@ -1,8 +1,8 @@
 package builder
 
 import (
+	"github.com/FanFani4/goverter/xtype"
 	"github.com/dave/jennifer/jen"
-	"github.com/jmattheis/goverter/xtype"
 )
 
 // Basic handles basic data types.

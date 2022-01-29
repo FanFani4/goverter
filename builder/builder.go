@@ -1,9 +1,9 @@
 package builder
 
 import (
+	"github.com/FanFani4/goverter/namer"
+	"github.com/FanFani4/goverter/xtype"
 	"github.com/dave/jennifer/jen"
-	"github.com/jmattheis/goverter/namer"
-	"github.com/jmattheis/goverter/xtype"
 )
 
 // Builder builds converter implementations, and can decide if it can handle the given type.
@@ -28,4 +28,6 @@ type MethodContext struct {
 	IdentityMapping map[string]struct{}
 	Signature       xtype.Signature
 	PointerChange   bool
+	SkipUnexported  bool
+	MapLower        bool
 }

@@ -5,8 +5,8 @@ import (
 	"go/types"
 	"strings"
 
+	"github.com/FanFani4/goverter/xtype"
 	"github.com/dave/jennifer/jen"
-	"github.com/jmattheis/goverter/xtype"
 )
 
 // Struct handles struct types.
@@ -30,6 +30,10 @@ func (*Struct) Build(gen Generator, ctx *MethodContext, sourceID *xtype.JenID, s
 			continue
 		}
 		if !targetField.Exported() {
+			if ctx.SkipUnexported {
+				continue
+			}
+
 			cause := unexportedStructError(targetField.Name(), source.T.String(), target.T.String())
 			return nil, nil, NewError(cause).Lift(&Path{
 				Prefix:     ".",
@@ -66,6 +70,7 @@ func (*Struct) Build(gen Generator, ctx *MethodContext, sourceID *xtype.JenID, s
 		if err != nil {
 			return nil, nil, err.Lift(lift...)
 		}
+
 		stmt = append(stmt, fieldStmt...)
 		stmt = append(stmt, jen.Id(name).Dot(targetField.Name()).Op("=").Add(fieldID.Code))
 	}
@@ -78,11 +83,23 @@ func mapField(gen Generator, ctx *MethodContext, targetField *types.Var, sourceI
 
 	mappedName, hasOverride := ctx.Mapping[targetField.Name()]
 	if ctx.Signature.Target != target.T.String() || !hasOverride {
-		if fieldSource, ok := source.StructField(targetField.Name()); ok {
-			nextID := sourceID.Code.Clone().Dot(targetField.Name())
+		var (
+			sourceName  = targetField.Name()
+			fieldSource *xtype.Type
+			ok          bool
+		)
+
+		if ctx.MapLower {
+			sourceName, fieldSource, ok = source.StructFieldLower(targetField.Name())
+		} else {
+			fieldSource, ok = source.StructField(targetField.Name())
+		}
+
+		if ok {
+			nextID := sourceID.Code.Clone().Dot(sourceName)
 			lift = append(lift, &Path{
 				Prefix:     ".",
-				SourceID:   targetField.Name(),
+				SourceID:   sourceName,
 				SourceType: fieldSource.T.String(),
 				TargetID:   targetField.Name(),
 				TargetType: targetField.Type().String(),
@@ -194,5 +211,5 @@ Possible solutions:
           // ...
       }
 
-See https://github.com/jmattheis/goverter#extend-with-custom-implementation`, targetField, targetField, sourceType, targetType)
+See https://github.com/FanFani4/goverter#extend-with-custom-implementation`, targetField, targetField, sourceType, targetType)
 }

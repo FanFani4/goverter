@@ -19,11 +19,11 @@ input:
         }
 error: |
     Error while creating converter method:
-        func (github.com/jmattheis/goverter/execution.Converter).Convert(source github.com/jmattheis/goverter/execution.Input) github.com/jmattheis/goverter/execution.Output
+        func (github.com/FanFani4/goverter/execution.Converter).Convert(source github.com/FanFani4/goverter/execution.Input) github.com/FanFani4/goverter/execution.Output
 
-    | github.com/jmattheis/goverter/execution.Input
+    | github.com/FanFani4/goverter/execution.Input
     |
-    |      | github.com/jmattheis/goverter/execution.Nested
+    |      | github.com/FanFani4/goverter/execution.Nested
     |      |
     |      |      | int
     |      |      |
@@ -34,6 +34,6 @@ error: |
     |
     |
     |
-    | github.com/jmattheis/goverter/execution.Output
+    | github.com/FanFani4/goverter/execution.Output
 
     TypeMismatch: Cannot convert int to string

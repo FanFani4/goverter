@@ -47,7 +47,7 @@ func TestScenario(t *testing.T) {
 				genFile,
 				GenerateConfig{
 					PackageName: "generated",
-					ScanDir:     "github.com/jmattheis/goverter/execution",
+					ScanDir:     "github.com/FanFani4/goverter/execution",
 				})
 
 			body, _ := ioutil.ReadFile(genFile)

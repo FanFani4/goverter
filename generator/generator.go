@@ -6,11 +6,11 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/FanFani4/goverter/builder"
+	"github.com/FanFani4/goverter/comments"
+	"github.com/FanFani4/goverter/namer"
+	"github.com/FanFani4/goverter/xtype"
 	"github.com/dave/jennifer/jen"
-	"github.com/jmattheis/goverter/builder"
-	"github.com/jmattheis/goverter/comments"
-	"github.com/jmattheis/goverter/namer"
-	"github.com/jmattheis/goverter/xtype"
 )
 
 type methodDefinition struct {
@@ -33,11 +33,13 @@ type methodDefinition struct {
 }
 
 type generator struct {
-	namer  *namer.Namer
-	name   string
-	file   *jen.File
-	lookup map[xtype.Signature]*methodDefinition
-	extend map[xtype.Signature]*methodDefinition
+	namer             *namer.Namer
+	name              string
+	file              *jen.File
+	lookup            map[xtype.Signature]*methodDefinition
+	extend            map[xtype.Signature]*methodDefinition
+	ignore_unexported bool
+	case_insensitive  bool
 }
 
 func (g *generator) registerMethod(methodType *types.Func, methodComments comments.Method) error {
@@ -206,6 +208,8 @@ func (g *generator) buildMethod(method *methodDefinition) *builder.Error {
 		IgnoredFields:   method.IgnoredFields,
 		IdentityMapping: method.IdentityMapping,
 		Signature:       xtype.Signature{Source: method.Source.T.String(), Target: method.Target.T.String()},
+		MapLower:        g.case_insensitive,
+		SkipUnexported:  g.ignore_unexported,
 	}
 	stmt, newID, err := g.buildNoLookup(ctx, xtype.VariableID(sourceID.Clone()), source, target)
 	if err != nil {

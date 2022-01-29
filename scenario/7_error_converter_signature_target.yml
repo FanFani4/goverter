@@ -8,6 +8,6 @@ input:
         }
 error: |-
     Error while creating converter method:
-        func (github.com/jmattheis/goverter/execution.Converter).Convert(map[string]int)
+        func (github.com/FanFani4/goverter/execution.Converter).Convert(map[string]int)
 
     return has no or too many parameters

@@ -55,6 +55,23 @@ func (t Type) StructField(name string) (*Type, bool) {
 	return nil, false
 }
 
+// StructField returns the type of a struct field ignoring case.
+func (t Type) StructFieldLower(name string) (string, *Type, bool) {
+	if !t.Struct {
+		panic("trying to get field of non struct")
+	}
+
+	name = strings.ToLower(name)
+
+	for y := 0; y < t.StructType.NumFields(); y++ {
+		m := t.StructType.Field(y)
+		if strings.ToLower(m.Name()) == name {
+			return m.Name(), TypeOf(m.Type()), true
+		}
+	}
+	return "", nil, false
+}
+
 // JenID a jennifer code wrapper with extra infos.
 type JenID struct {
 	Code     *jen.Statement

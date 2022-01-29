@@ -6,8 +6,8 @@ import (
 	"os"
 	"path"
 
-	"github.com/jmattheis/goverter/comments"
-	"github.com/jmattheis/goverter/generator"
+	"github.com/FanFani4/goverter/comments"
+	"github.com/FanFani4/goverter/generator"
 )
 
 // GenerateConfig the config for generating a converter.
