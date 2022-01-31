@@ -24,6 +24,7 @@ var BuildSteps = []builder.Builder{
 	&builder.Pointer{},
 	&builder.TargetPointer{},
 	&builder.Basic{},
+	&builder.BasicSourcePtrRule{},
 	&builder.Struct{},
 	&builder.List{},
 	&builder.Map{},

@@ -14,7 +14,7 @@ type Struct struct{}
 
 // Matches returns true, if the builder can create handle the given types.
 func (*Struct) Matches(source, target *xtype.Type) bool {
-	return source.Struct && target.Struct
+	return ((source.Pointer && source.PointerInner.Struct) || source.Struct) && target.Struct
 }
 
 // Build creates conversion source code for the given source and target type.
@@ -80,6 +80,10 @@ func (*Struct) Build(gen Generator, ctx *MethodContext, sourceID *xtype.JenID, s
 
 func mapField(gen Generator, ctx *MethodContext, targetField *types.Var, sourceID *xtype.JenID, source, target *xtype.Type) (*jen.Statement, *xtype.Type, []jen.Code, []*Path, *Error) {
 	lift := []*Path{}
+
+	if source.Pointer {
+		source = source.PointerInner
+	}
 
 	mappedName, hasOverride := ctx.Mapping[targetField.Name()]
 	if ctx.Signature.Target != target.T.String() || !hasOverride {

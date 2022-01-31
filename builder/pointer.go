@@ -1,8 +1,8 @@
 package builder
 
 import (
-	"github.com/dave/jennifer/jen"
 	"github.com/FanFani4/goverter/xtype"
+	"github.com/dave/jennifer/jen"
 )
 
 // Pointer handles pointer types.
@@ -19,11 +19,18 @@ func (*Pointer) Build(gen Generator, ctx *MethodContext, sourceID *xtype.JenID, 
 
 	outerVar := ctx.Name(target.ID())
 
-	nextBlock, id, err := gen.Build(ctx, xtype.OtherID(jen.Op("*").Add(sourceID.Code.Clone())), source.PointerInner, target.PointerInner)
+	src := source
+	foo := sourceID.Code.Clone()
+	if !source.PointerInner.Struct {
+		foo = jen.Op("*").Add(foo.Clone())
+		src = source.PointerInner
+	}
+
+	nextBlock, id, err := gen.Build(ctx, xtype.OtherID(foo), src, target.PointerInner)
 	if err != nil {
 		return nil, nil, err.Lift(&Path{
 			SourceID:   "*",
-			SourceType: source.PointerInner.T.String(),
+			SourceType: source.T.String(),
 			TargetID:   "*",
 			TargetType: target.PointerInner.T.String(),
 		})

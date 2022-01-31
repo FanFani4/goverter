@@ -48,3 +48,30 @@ func (*BasicTargetPointerRule) Build(gen Generator, ctx *MethodContext, sourceID
 
 	return stmt, xtype.OtherID(newID), err
 }
+
+type BasicSourcePtrRule struct{}
+
+// Matches returns true, if the builder can create handle the given types.
+func (*BasicSourcePtrRule) Matches(source, target *xtype.Type) bool {
+	return source.Pointer && target.Basic && source.PointerInner.BasicType.Kind() == target.BasicType.Kind()
+}
+
+func (*BasicSourcePtrRule) Build(gen Generator, ctx *MethodContext, sourceID *xtype.JenID, source, target *xtype.Type) ([]jen.Code, *xtype.JenID, *Error) {
+	name := ctx.Name(target.ID())
+
+	stmt, id, err := gen.Build(ctx, sourceID, source.PointerInner, target)
+	if err != nil {
+		return nil, nil, err.Lift(&Path{
+			SourceID:   "*",
+			SourceType: source.PointerInner.T.String(),
+			TargetID:   "*",
+			TargetType: target.T.String(),
+		})
+	}
+
+	stmt = append(stmt, jen.Var().Id(name).Id(target.T.String()))
+	stmt = append(stmt, jen.If(id.Code.Op("!=").Nil().Block(jen.Id(name).Op("=").Op("*").Id(source.ID()))))
+	newID := jen.Id(name)
+
+	return stmt, xtype.OtherID(newID), err
+}
