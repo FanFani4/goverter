@@ -90,7 +90,7 @@ func (*Struct) Build(gen Generator, ctx *MethodContext, sourceID *xtype.JenID, s
 	}
 
 	if wrapPtr {
-		res = append(res, jen.If(jen.Id(name).Op("!=").Nil()).Block(stmt...))
+		res = append(res, jen.If(sourceID.Code.Clone().Op("!=").Nil()).Block(stmt...))
 	} else {
 		res = append(res, stmt...)
 	}
