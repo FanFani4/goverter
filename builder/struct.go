@@ -14,14 +14,28 @@ type Struct struct{}
 
 // Matches returns true, if the builder can create handle the given types.
 func (*Struct) Matches(source, target *xtype.Type) bool {
-	return ((source.Pointer && source.PointerInner.Struct) || source.Struct) && target.Struct
+	return ((source.Pointer && source.PointerInner.Struct) || source.Struct) && ((target.Pointer && target.PointerInner.Struct) || target.Struct)
 }
 
 // Build creates conversion source code for the given source and target type.
-func (*Struct) Build(gen Generator, ctx *MethodContext, sourceID *xtype.JenID, source, target *xtype.Type) ([]jen.Code, *xtype.JenID, *Error) {
-	name := ctx.Name(target.ID())
-	stmt := []jen.Code{
-		jen.Var().Id(name).Add(target.TypeAsJen()),
+func (*Struct) Build(gen Generator, ctx *MethodContext, sourceID *xtype.JenID, src, tgt *xtype.Type) ([]jen.Code, *xtype.JenID, *Error) {
+	name := ctx.Name(tgt.ID())
+
+	res := []jen.Code{jen.Var().Id(name).Add(tgt.TypeAsJen())}
+	stmt := []jen.Code{}
+
+	wrapPtr := false
+	target := tgt
+	if tgt.Pointer {
+		wrapPtr = true
+		target = tgt.PointerInner
+		n := target.NamedType.Obj().Pkg().Name() + "." + target.NamedType.Obj().Name()
+		stmt = append(stmt, jen.Id(name).Op(":=").Id("new").Call(jen.Id(n)))
+	}
+
+	source := src
+	if source.Pointer {
+		source = src.PointerInner
 	}
 
 	for i := 0; i < target.StructType.NumFields(); i++ {
@@ -75,7 +89,13 @@ func (*Struct) Build(gen Generator, ctx *MethodContext, sourceID *xtype.JenID, s
 		stmt = append(stmt, jen.Id(name).Dot(targetField.Name()).Op("=").Add(fieldID.Code))
 	}
 
-	return stmt, xtype.VariableID(jen.Id(name)), nil
+	if wrapPtr {
+		res = append(res, jen.If(jen.Id(name).Op("!=").Nil()).Block(stmt...))
+	} else {
+		res = append(res, stmt...)
+	}
+
+	return res, xtype.VariableID(jen.Id(name)), nil
 }
 
 func mapField(gen Generator, ctx *MethodContext, targetField *types.Var, sourceID *xtype.JenID, source, target *xtype.Type) (*jen.Statement, *xtype.Type, []jen.Code, []*Path, *Error) {
@@ -86,7 +106,7 @@ func mapField(gen Generator, ctx *MethodContext, targetField *types.Var, sourceI
 	}
 
 	mappedName, hasOverride := ctx.Mapping[targetField.Name()]
-	if ctx.Signature.Target != target.T.String() || !hasOverride {
+	if ((ctx.Signature.Target != target.T.String()) && (ctx.Signature.Target != "*"+target.T.String()) && ("*"+ctx.Signature.Target != target.T.String())) || !hasOverride {
 		var (
 			sourceName  = targetField.Name()
 			fieldSource *xtype.Type

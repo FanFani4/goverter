@@ -211,6 +211,7 @@ func (g *generator) buildMethod(method *methodDefinition) *builder.Error {
 		MapLower:        g.case_insensitive,
 		SkipUnexported:  g.ignore_unexported,
 	}
+
 	stmt, newID, err := g.buildNoLookup(ctx, xtype.VariableID(sourceID.Clone()), source, target)
 	if err != nil {
 		return err

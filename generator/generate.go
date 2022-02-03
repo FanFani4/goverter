@@ -21,11 +21,11 @@ type Config struct {
 // BuildSteps that'll used for generation.
 var BuildSteps = []builder.Builder{
 	&builder.BasicTargetPointerRule{},
+	&builder.Struct{},
 	&builder.Pointer{},
 	&builder.TargetPointer{},
 	&builder.Basic{},
 	&builder.BasicSourcePtrRule{},
-	&builder.Struct{},
 	&builder.List{},
 	&builder.Map{},
 }
