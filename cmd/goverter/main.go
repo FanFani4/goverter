@@ -25,6 +25,7 @@ func main() {
 		PackageName: *packageName,
 		ScanDir:     pattern,
 	})
+
 	if err != nil {
 		_, _ = fmt.Fprintln(os.Stderr, err)
 		return

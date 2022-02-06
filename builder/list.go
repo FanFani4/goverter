@@ -1,8 +1,8 @@
 package builder
 
 import (
-	"github.com/dave/jennifer/jen"
 	"github.com/FanFani4/goverter/xtype"
+	"github.com/dave/jennifer/jen"
 )
 
 // List handles array / slice types.

@@ -40,6 +40,14 @@ type Type struct {
 	BasicType     *types.Basic
 }
 
+func (t Type) ConvertibleTo(other *Type) bool {
+	if !t.Basic || !other.Basic {
+		return false
+	}
+
+	return types.ConvertibleTo(t.BasicType, other.BasicType)
+}
+
 // StructField returns the type of a struct field.
 func (t Type) StructField(name string) (*Type, bool) {
 	if !t.Struct {

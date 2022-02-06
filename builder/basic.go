@@ -59,7 +59,7 @@ func (*BasicSourcePtrRule) Matches(source, target *xtype.Type) bool {
 func (*BasicSourcePtrRule) Build(gen Generator, ctx *MethodContext, sourceID *xtype.JenID, source, target *xtype.Type) ([]jen.Code, *xtype.JenID, *Error) {
 	name := ctx.Name(target.ID())
 
-	stmt, id, err := gen.Build(ctx, sourceID, source.PointerInner, target)
+	stmt, _, err := gen.Build(ctx, sourceID, source.PointerInner, target)
 	if err != nil {
 		return nil, nil, err.Lift(&Path{
 			SourceID:   "*",
@@ -70,7 +70,7 @@ func (*BasicSourcePtrRule) Build(gen Generator, ctx *MethodContext, sourceID *xt
 	}
 
 	stmt = append(stmt, jen.Var().Id(name).Id(target.T.String()))
-	stmt = append(stmt, jen.If(id.Code.Op("!=").Nil().Block(jen.Id(name).Op("=").Op("*").Id(source.ID()))))
+	stmt = append(stmt, jen.If(sourceID.Code.Op("!=").Nil().Block(jen.Id(name).Op("=").Op("*").Id(source.ID()))))
 	newID := jen.Id(name)
 
 	return stmt, xtype.OtherID(newID), err
