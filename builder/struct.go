@@ -30,7 +30,7 @@ func (*Struct) Build(gen Generator, ctx *MethodContext, sourceID *xtype.JenID, s
 		wrapPtr = true
 		target = tgt.PointerInner
 		n := target.NamedType.Obj().Pkg().Name() + "." + target.NamedType.Obj().Name()
-		stmt = append(stmt, jen.Id(name).Op(":=").Id("new").Call(jen.Id(n)))
+		stmt = append(stmt, jen.Id(name).Op("=").Id("new").Call(jen.Id(n)))
 	}
 
 	source := src

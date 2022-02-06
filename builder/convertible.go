@@ -1,8 +1,6 @@
 package builder
 
 import (
-	"fmt"
-
 	"github.com/FanFani4/goverter/xtype"
 	"github.com/dave/jennifer/jen"
 )
@@ -20,7 +18,10 @@ func (*Convertible) Matches(source, target *xtype.Type) bool {
 	src := source
 	if src.Pointer {
 		src = source.PointerInner
+	}
 
+	if src.Basic && trgt.Basic && src.BasicType.Kind() == trgt.BasicType.Kind() {
+		return false
 	}
 
 	return src.ConvertibleTo(trgt)
@@ -47,8 +48,5 @@ func (*Convertible) Build(_ Generator, ctx *MethodContext, sourceID *xtype.JenID
 		resultID = jen.Op("&").Id(name)
 	}
 
-	for _, s := range stmt {
-		fmt.Printf("%#v", s)
-	}
 	return stmt, xtype.OtherID(resultID), nil
 }
