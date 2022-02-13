@@ -53,7 +53,7 @@ type BasicSourcePtrRule struct{}
 
 // Matches returns true, if the builder can create handle the given types.
 func (*BasicSourcePtrRule) Matches(source, target *xtype.Type) bool {
-	return source.Pointer && target.Basic && source.PointerInner.BasicType.Kind() == target.BasicType.Kind()
+	return source.Pointer && source.PointerInner.Basic && target.Basic && source.PointerInner.BasicType.Kind() == target.BasicType.Kind()
 }
 
 func (*BasicSourcePtrRule) Build(gen Generator, ctx *MethodContext, sourceID *xtype.JenID, source, target *xtype.Type) ([]jen.Code, *xtype.JenID, *Error) {
