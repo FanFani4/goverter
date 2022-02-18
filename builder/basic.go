@@ -69,8 +69,9 @@ func (*BasicSourcePtrRule) Build(gen Generator, ctx *MethodContext, sourceID *xt
 		})
 	}
 
+	src := sourceID.Code.GoString()
 	stmt = append(stmt, jen.Var().Id(name).Id(target.T.String()))
-	stmt = append(stmt, jen.If(sourceID.Code.Op("!=").Nil().Block(jen.Id(name).Op("=").Op("*").Id(source.ID()))))
+	stmt = append(stmt, jen.If(sourceID.Code.Op("!=").Nil().Block(jen.Id(name).Op("=").Op("*").Id(src))))
 	newID := jen.Id(name)
 
 	return stmt, xtype.OtherID(newID), err
